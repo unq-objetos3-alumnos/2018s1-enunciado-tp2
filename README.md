@@ -12,7 +12,8 @@ fueran colecciones, cumpliendo:
  - Solo nos interesa persistir clases inmutables (case class).
  - Debo poder reutilizar definiciones de queries sin causar efectos de lado.
  - Se debe respetar la idea de transacción y permitir al usuario realizar varias operaciones dentro de una transacción.
- 
+
+
 ## Backends
 
 Pueden usar el motor de bases de datos relacionales que les resulte más práctico, 
@@ -225,7 +226,6 @@ Las case classes proveen varios métodos útiles:
  - `tupled` retorna una funcion que espera una tupla y devuelve una instancia de la clase.
  - `unapply` retorna una función que espera una instancia de la clase y retorna un Option de una tupla.
  - `copy` permite generar una nueva instancia variando ciertos atributos. Ej.: `fido.copy(edad=10)`.
-
 
 ## Bonus
 
