@@ -11,7 +11,7 @@ fueran colecciones, cumpliendo:
  - Crear todas las abstracciones que sean necesarias.
  - Solo nos interesa persistir clases inmutables (case class).
  - Debo poder reutilizar definiciones de queries sin causar efectos de lado.
- - Se debe respetar la idea de transacción y permitir al usuario realizar varias operaciones dentro de una transaccion.
+ - Se debe respetar la idea de transacción y permitir al usuario realizar varias operaciones dentro de una transacción.
  
 ## Backends
 
@@ -160,20 +160,23 @@ val notBoby = fidosYCachorros.filter(_.nombre =!= 'boby').map(_.nombre)
 
 // Donde el SQL generado se vería:
 // 
-//   select nombre
+//   select r.nombre
 //   from (select nombre, edad
 //           from Perros
 //           where nombre = 'fido'
 //         union all select nombre, edad
 //           from Perros
 //           where edad < 2
-//        )
-//   where nombre <> 'boby'
+//        ) as r
+//   where r.nombre <> 'boby'
 
 ```
 
 En este sentido, puede considerarse que `query(Perros)` es un tipo al que podemos llamar
  `TableQuery` y cada subsecuente `union` genera otra `TableQuery`. 
+Dado que los selects pueden anidarse, hay que tener en cuenta cómo generar los aliases que 
+usemos para las tablas.
+ 
 No nos interesa la eficiencia, con lo cual no nos preocupa usar selects dentro de un from.
 
 
@@ -214,3 +217,16 @@ val objects = List(unPerro, unEdificio, unAuto)
 schema.addAll(objects)
 
 ```
+
+## Tips:
+
+Las case classes proveen varios métodos útiles:
+
+ - `tupled` retorna una funcion que espera una tupla y devuelve una instancia de la clase.
+ - `unapply` retorna una función que espera una instancia de la clase y retorna un Option de una tupla.
+ - `copy` permite generar una nueva instancia variando ciertos atributos. Ej.: `fido.copy(edad=10)`.
+
+
+## Bonus
+
+Implementar foreign keys y permitir joins entre tablas.
