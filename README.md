@@ -12,6 +12,7 @@ fueran colecciones, cumpliendo:
  - Solo nos interesa persistir clases inmutables (case class).
  - Debo poder reutilizar definiciones de queries sin causar efectos de lado.
  - Se debe respetar la idea de transacción y permitir al usuario realizar varias operaciones dentro de una transacción.
+ - No vale usar metaprogramación (eso es algo que vamos a ver en las clases siguientes).
 
 
 ## Backends
@@ -48,12 +49,12 @@ object Perros extends Table[Perro](
   def nombre = column[String]("nombre")
   def edad = column[Int]("edad")
   
-  def * = (nombre, edad)
+  def * = ... // acá iría algún tipo de mapeo que permita relacionar columnas <=> fields de una clase 
 }
 ```
 
-Donde el método `*` es la proyección de la tabla usada para queries e inserts.
-Esta sintaxis puede ir variando a medida que surjan limitaciones en la implementación.
+Donde el método `*` es la proyección de la tabla usada para queries e inserts. Es decir, es el lugar donde declaramos explícitamente el mapeo entre fields de una clase y columnas de una tabla.
+Esta sintaxis puede ir variando a medida que surjan limitaciones en la implementación, esto es solo una guía.
 
 Lo importante es que sea cómodo para el usuario de nuestra librería declarar tablas. 
 Es decir, queremos que sea lo más expresiva y declarativa que se pueda.
@@ -215,7 +216,7 @@ Dada una instancia, queremos poder persistirla:
 ```scala
 val fido = Perro(nombre = 'fido', edad = 8)
 
-val perros = query(Perro)
+val perros = query(Perros)
 
 perros.add(fido)
 
@@ -225,7 +226,7 @@ O modificar un valor:
 
 ```scala
 
-val fido = query(Perro).filter(_name === 'fido')
+val fido = query(Perros).filter(_name === 'fido')
 
 fido.update(_.edad, 9)
 
