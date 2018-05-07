@@ -132,7 +132,34 @@ println(perros.sortBy(_.nombre.desc).sql)
 //     from Perros
 //     order by nombre desc;
 
+println(perros.filter( perro => (perro.edad * 0.1) < 2).sql)
+//   select nombre, edad
+//     from Perros
+//     where edad * 0.1 < 2;
+
+println(perros.map( _.nombre + "-kun").sql)
+//   select nombre + "-kun"
+//     from Perros
+
+println(perros.map(_.edad).filter(_ < 12).sql)
+// Dos opciones:
+//
+//   select edad
+//     from Perros
+//     where edad < 12;
+//
+// O bien:
+//
+//   select _edad 
+//     from ( select edad as _edad from Perros )
+//     where _edad < 12
+//
+// Dependiendo de su implementacion.
+
  ```
+ 
+ Notar que tanto `perros.map(_.edad).filter(_ < 12)` como `perros.filter(_.edad < 12).map(_.edad)` debería darme los mismos resultados una vez ejecutado.
+
 
 ### Unions
 
