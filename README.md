@@ -258,3 +258,46 @@ Las case classes proveen varios métodos útiles:
 ## Bonus
 
 Implementar foreign keys y permitir joins entre tablas.
+
+## Ayuda para la implementación de tipos
+
+```scala
+package mapperexample
+
+object MapperExampleApp extends App {
+ trait Mapping[ResultType, 
+    MappingType <: Mapping[ResultType, MappingType]]
+  
+  trait StringMapping extends Mapping[String, StringMapping]
+  
+  trait Column[S]
+  
+  trait Condition
+  
+  trait Query[MappingType, ResultType] {
+    
+    
+    def map[OtherResultType](f:
+        MappingType => Column[OtherResultType]):
+        Query[MappingType, OtherResultType] = ???
+    def filter(f: MappingType => Condition): Query[MappingType, ResultType] = ???
+    
+    def sql() : String = ???
+    def run() : Seq[ResultType] = ???
+  }
+  
+  case class Perro(nombre: String, edad: Int)
+  
+  class PerroMapping extends Mapping[Perro, PerroMapping] {
+    def nombre: Column[String] = ???
+  }
+  
+  object Perros extends PerroMapping
+  
+  def query[ResultType, MappingType <: Mapping[ResultType, MappingType]]
+    (mapping: Mapping[ResultType, MappingType]):Query[MappingType, ResultType] = ???
+  
+  val a = query(Perros).map(_.nombre)
+  
+}
+```
