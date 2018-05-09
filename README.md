@@ -67,7 +67,7 @@ de manera tal que se pueda escribir algo como:
 
 ```scala
 
-    val viejitos:Query[String] = query(Perros)
+    val viejitos:Query[Table[String]] = query(Perros)
             .filter(_.edad > 12)
             .map(_.nombre)
 
