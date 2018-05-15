@@ -301,3 +301,38 @@ object MapperExampleApp extends App {
   
 }
 ```
+
+Otro ejemplo visto en clase:
+
+```scala
+object MapperExampleApp extends App {
+
+  trait Mapping[R] {
+    type ResultType = R
+    type MappingType
+  }
+
+  case class Perro(nombre: String, edad: Int)
+
+  trait Column[T] extends Mapping[T] {
+    type MappingType = this.type
+  }
+
+  trait StringColumn extends Column[String] {
+    def +(c: StringColumn): StringColumn = ???
+  }
+
+  object Perros extends Mapping[Perro] {
+    type MappingType = this.type
+    def nombre: StringColumn = ???
+    def edad: StringColumn = ???
+  }
+
+  class Query[T <: Mapping[_]](val m: T) {
+    def run() : Seq[m.ResultType] = ???
+    def map[S](f: m.MappingType => Mapping[S]): Query[Mapping[S]] = ???
+  }
+
+  val a = new Query(Perros).map(a => a.nombre + a.edad).run()
+}
+```
