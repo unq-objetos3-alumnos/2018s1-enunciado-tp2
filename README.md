@@ -330,7 +330,7 @@ object MapperExampleApp extends App {
 
   class Query[T <: Mapping[_]](val m: T) {
     def run() : Seq[m.ResultType] = ???
-    def map[S](f: m.MappingType => Mapping[S]): Query[Mapping[S]] = ???
+    def map[S](f: T => Mapping[S]): Query[Mapping[S]] = ???
   }
 
   val a = new Query(Perros).map(a => a.nombre + a.edad).run()
